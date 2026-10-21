@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
   <meta name="theme-color" content="#cc2484" />
   <title>Genta One × Bait Lapletot — Propuesta</title>
   <meta name="description" content="Propuesta de sistema para Bait Lapletot: donativos, cobranza, cuadre y Gemach en un solo ecosistema." />
@@ -30,14 +30,18 @@
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
+    html { scroll-behavior: smooth; overflow-x: hidden; overflow-x: clip; touch-action: pan-y; -webkit-text-size-adjust: 100%; }
     body {
+      position: relative;
+      width: 100%;
+      overflow-x: hidden;
+      overflow-x: clip;
+      touch-action: pan-y;
       font-family: var(--font-sans);
       color: var(--ink);
       background: var(--surface);
       line-height: 1.5;
       -webkit-font-smoothing: antialiased;
-      overflow-x: hidden;
     }
     img { max-width: 100%; display: block; }
     a { color: inherit; text-decoration: none; }
@@ -1267,6 +1271,17 @@
   </section>
 
   <script>
+    ["gesturestart", "gesturechange", "gestureend"].forEach((ev) =>
+      document.addEventListener(ev, (e) => e.preventDefault(), { passive: false })
+    );
+    document.addEventListener("touchmove", (e) => { if (e.touches.length > 1) e.preventDefault(); }, { passive: false });
+    let lastTouchEnd = 0;
+    document.addEventListener("touchend", (e) => {
+      const now = Date.now();
+      if (now - lastTouchEnd < 300) e.preventDefault();
+      lastTouchEnd = now;
+    }, { passive: false });
+
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     function animateCount(el, to, { from = 0, duration = 1200 } = {}) {
